@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rajput Provision Store · Counter Demo</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛒</text></svg>">
+<style>
+:root{--bg:#F5F7F4;--card:#fff;--ink:#17241D;--mut:#4B5A52;--line:#D5DDD6;--g:#1F5C45;--gt:#fff;--warn:#8A5300;--warnbg:#FFF1D6;--bad:#A12A1F;--badbg:#FDE5E2;--ok:#17653F;--okbg:#DDF3E6;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101814;--card:#1A2620;--ink:#E8F0EA;--mut:#A8B8AE;--line:#2F4036;--g:#4FB58A;--gt:#08160F;--warn:#F2C26B;--warnbg:#3A2C10;--bad:#FF9B90;--badbg:#3F1A16;--ok:#7BE0AA;--okbg:#14301F}}
+:root[data-theme="dark"]{--bg:#101814;--card:#1A2620;--ink:#E8F0EA;--mut:#A8B8AE;--line:#2F4036;--g:#4FB58A;--gt:#08160F;--warn:#F2C26B;--warnbg:#3A2C10;--bad:#FF9B90;--badbg:#3F1A16;--ok:#7BE0AA;--okbg:#14301F}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Devanagari",sans-serif;font-size:16px}
+*{box-sizing:border-box}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--card);border-bottom:1px solid var(--line)}
+h1{font-size:18px;margin:0}
+.demo{font-size:12px;color:var(--warn);background:var(--warnbg);padding:2px 8px;border-radius:99px;font-weight:700}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:0;background:var(--card);color:var(--ink);padding:10px 14px;font-size:15px;cursor:pointer;min-height:44px}
+.seg button.on{background:var(--g);color:var(--gt);font-weight:700}
+nav{display:flex;gap:8px;padding:12px 16px;flex-wrap:wrap}
+main{padding:0 16px 32px;max-width:1200px;margin:0 auto}
+.two{display:grid;grid-template-columns:1.6fr 1fr;gap:16px}
+@media(max-width:820px){.two{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-top:10px}
+.it{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:10px;text-align:left;cursor:pointer;min-height:84px}
+.it:hover{border-color:var(--g)}
+.it b{display:block;font-size:17px}
+.it span{display:block;color:var(--mut);font-size:13px}
+.it em{font-style:normal;font-weight:700;color:var(--g)}
+.it.out{opacity:.45}
+input,select{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px;min-height:44px;max-width:100%}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:99px;padding:8px 14px;cursor:pointer;min-height:40px}
+.chip.on{background:var(--g);color:var(--gt);border-color:var(--g)}
+.btn{border:0;background:var(--g);color:var(--gt);padding:12px 16px;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;min-height:48px}
+.btn.alt{background:var(--card);color:var(--ink);border:1px solid var(--line);font-weight:500}
+.btn.sm{padding:6px 10px;min-height:36px;font-size:14px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}
+.q{display:flex;align-items:center;gap:6px}
+.q button{width:36px;height:36px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:18px;cursor:pointer}
+.tot{font-size:26px;font-weight:800}
+.pay{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.sc{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:620px}
+th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left;font-size:15px}
+th{color:var(--mut);font-weight:600}
+.pill{padding:2px 8px;border-radius:99px;font-size:13px;font-weight:700}
+.ok{background:var(--okbg);color:var(--ok)}.low{background:var(--badbg);color:var(--bad)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
+.stat b{display:block;font-size:26px}.stat span{color:var(--mut);font-size:14px}
+.note{color:var(--mut);font-size:14px;margin:6px 0}
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:16px;z-index:5}
+#modal .card{max-width:380px;width:100%;max-height:90vh;overflow:auto}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:10px;display:none;z-index:6;max-width:90vw}
+.rc{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14px}
+.frm{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin:8px 0 16px}.frm label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mut)}.frm input,.frm select{width:100%}.mic{min-width:48px;font-size:20px}.mic.live{background:var(--bad);color:#fff;border-color:var(--bad)}
+input[type=checkbox]{min-height:auto;width:22px;height:22px;vertical-align:middle}
+@page{size:80mm auto;margin:4mm}
+@media print{body *{visibility:hidden}#slip,#slip *{visibility:visible}#slip{position:absolute;left:0;top:0;width:100%;color:#000;background:#fff}.noprint{display:none!important}}
+.hide{display:none}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+<header>
+ <div><h1>🛒 राजपूत प्रोविज़न स्टोर · Rajput Provision Store <span class="demo">DEMO</span></h1><div class="note">Sample data only. Nothing here is real.</div></div>
+ <div class="seg" id="roleSeg"><button class="on" data-r="staff">कर्मचारी · Staff</button><button data-r="owner">मालिक · Owner</button></div>
+</header>
+<nav><div class="seg" id="tabs"><button class="on" data-t="bill">बिलिंग · Billing</button><button data-t="stock">स्टॉक · Inventory</button><button data-t="ret">↩️ वापसी · Return</button><button data-t="own" id="ownTab" class="hide">मालिक व्यू · Owner view</button></div></nav>
+<main>
+<section id="t-bill" class="two">
+ <div class="card">
+  <div class="note" style="font-size:15px;margin:0 0 8px"><b>1</b> सामान चुनें → <b>2</b> भुगतान दबाएँ (नकद / UPI / उधार) → <b>3</b> प्रिंट करें<br>Pick items → press payment → print the bill</div><div style="display:flex;gap:8px;margin-bottom:8px"><input id="scan" placeholder="🔎 बारकोड स्कैन करें या कोड लिखें, फिर Enter · Scan or type code" style="flex:1;min-width:0" inputmode="numeric" aria-label="Scan code"></div><div style="display:flex;gap:8px"><input id="q" placeholder="सामान खोजें या बोलें · Search or speak" style="flex:1;min-width:0" aria-label="Search item"><select id="vlang" aria-label="Voice language"><option value="hi-IN">हिन्दी</option><option value="en-IN">English</option></select><button class="btn alt mic" id="mic" aria-label="बोलकर लिखें · Speak" title="बोलकर लिखें · Speak">🎤</button></div><div class="note" id="voiceNote">🎤 दबाएँ और सामान का नाम बोलें, जैसे “चावल”. Press the mic and say an item name.</div>
+  <div class="chips" id="chips"></div>
+  <div class="grid" id="grid"></div>
+ </div>
+ <div class="card">
+  <div class="seg" id="modeSeg" style="width:100%"><button class="on" data-m="retail" style="flex:1">खुदरा · Retail</button><button data-m="wholesale" style="flex:1">थोक · Wholesale</button></div>
+  <div id="cart" style="margin-top:8px"></div>
+  <div class="row"><label for="mob">मोबाइल (पॉइंट्स) · Mobile</label><input id="mob" type="tel" inputmode="numeric" maxlength="10" placeholder="10 अंक" style="width:130px"></div><div class="row"><label><input type="checkbox" id="redeem"> पॉइंट इस्तेमाल करें · Use points</label><span class="note" id="pts"></span></div>
+  <div class="row"><label for="disc">छूट % · Discount %</label><input id="disc" type="number" min="0" max="50" value="0" style="width:90px"></div>
+  <div id="pinRow" class="row hide"><label for="pin">मालिक PIN (डेमो: 1234)</label><input id="pin" type="password" inputmode="numeric" style="width:90px"></div>
+  <div class="row"><span>कुल · Total</span><span class="tot" id="total">₹0</span></div>
+  <div class="pay"><button class="btn" data-p="Cash">💵 नकद</button><button class="btn" data-p="UPI">📱 UPI</button><button class="btn alt" data-p="Udhaar">📒 उधार</button></div>
+  <div class="row" style="border:0"><button class="btn alt sm" id="hold">⏸ होल्ड · Hold bill</button><span id="heldBox" class="chips" style="margin:0"></span></div>
+  <div class="note">Staff can only create bills. No deleting bills or editing prices. Discount above 5% needs the owner PIN.</div>
+ </div>
+</section>
+<section id="t-stock" class="hide card">
+ <div class="row" style="border:0"><h2 style="margin:0;font-size:20px">स्टॉक · Inventory (दुकान + गोदाम)</h2><span class="note" id="stockNote"></span></div>
+ <p class="note hide" id="addHint">नया सामान जोड़ने के लिए ऊपर Owner चुनें · Switch to Owner to add items.</p>
+ <form class="hide" id="addBox" onsubmit="return false"><h3 style="margin:8px 0 0;font-size:17px">➕ नया सामान जोड़ें · Add new item</h3><div class="frm">
+  <label>नाम (हिन्दी)<input id="nHi" placeholder="जैसे: बेसन"></label>
+  <label>Name (English)<input id="nEn" placeholder="e.g. Besan"></label>
+  <label>श्रेणी · Category<input id="nCat" list="catList" placeholder="दाल, तेल…"></label>
+  <label>इकाई · Unit<select id="nU"><option>kg</option><option>pc</option><option>ltr</option></select></label>
+  <label>खुदरा भाव ₹<input id="nRp" type="number" min="0" inputmode="decimal"></label>
+  <label>थोक भाव ₹<input id="nWp" type="number" min="0" inputmode="decimal"></label>
+  <label>दुकान स्टॉक<input id="nShop" type="number" min="0" value="0"></label>
+  <label>गोदाम स्टॉक<input id="nGod" type="number" min="0" value="0"></label>
+  <label>न्यूनतम स्टॉक<input id="nMin" type="number" min="0" value="10"></label>
+ </div><datalist id="catList"></datalist><button class="btn" id="addBtn" type="button">सामान जोड़ें · Add item</button></form>
+ <div class="sc"><table><thead><tr><th>सामान</th><th>दुकान</th><th>गोदाम</th><th>न्यूनतम</th><th>स्थिति</th><th>कार्य</th></tr></thead><tbody id="stockBody"></tbody></table></div>
+</section>
+<section id="t-ret" class="hide card"><h2 style="margin:0 0 6px;font-size:20px">↩️ वापसी · Return a product</h2><div id="retBody"></div></section>
+<section id="t-own" class="hide">
+ <div class="card noprint" style="margin-bottom:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap"><button class="btn" id="xl">📥 Excel डाउनलोड · Download Excel</button><span class="note" style="flex:1;min-width:220px">फ़ाइल को Google Drive के “Rajput Provision Records” फ़ोल्डर में डालें ताकि पूरा परिवार देख सके. Save it, then upload it to a shared Google Drive folder.</span></div><div class="stats" id="stats"></div>
+ <div class="two">
+  <div class="card"><h2 style="margin:0 0 6px;font-size:18px">⚠️ कम स्टॉक · Low stock</h2><div id="lowList"></div></div>
+  <div class="card"><h2 style="margin:0 0 6px;font-size:18px">🧾 ताज़ा बिल · Recent bills</h2><div id="recent"></div><button class="btn alt sm" id="sample" style="margin-top:10px">Load a sample day</button></div>
+ </div>
+ <div class="card" style="margin-top:16px"><h2 style="margin:0 0 6px;font-size:18px">↩️ वापसी · Returns</h2><div id="retList"></div></div>
+ <div class="two" style="margin-top:16px"><div class="card"><h2 style="margin:0 0 6px;font-size:18px">📒 उधार खाता · Credit ledger</h2><div id="udhList"></div></div><div class="card"><h2 style="margin:0 0 6px;font-size:18px">🛍️ ऑर्डर सूची · Reorder list</h2><div id="reorder"></div></div></div>
+ <div class="two" style="margin-top:16px"><div class="card"><h2 style="margin:0 0 6px;font-size:18px">🧮 दिन का हिसाब · Daily closing</h2><p class="note">दराज़ में गिनकर नकद लिखें · Count the cash drawer and enter it</p><div class="row" style="border:0"><input id="cc" type="number" min="0" placeholder="₹ गिना हुआ नकद" style="flex:1"><button class="btn" id="ccGo">मिलान · Check</button></div><div id="ccOut" class="note"></div></div><div class="card"><h2 style="margin:0 0 6px;font-size:18px">🔍 गतिविधि लॉग · Activity log</h2><div id="logList"></div></div></div>
+ <p class="note">Family members outside the state would see this same screen from their own phones, view-only.</p>
+</section>
+</main>
+<div id="modal"><div class="card" id="mbox"></div></div>
+<div id="toast" role="status"></div>
+<script>
+var items=[
+{id:1,hi:"चावल",en:"Rice",cat:"अनाज",u:"kg",rp:48,wp:44,shop:60,god:400,min:30},
+{id:2,hi:"आटा",en:"Atta",cat:"अनाज",u:"kg",rp:38,wp:35,shop:80,god:500,min:40},
+{id:3,hi:"चीनी",en:"Sugar",cat:"अनाज",u:"kg",rp:44,wp:42,shop:25,god:300,min:30},
+{id:4,hi:"अरहर दाल",en:"Arhar dal",cat:"दाल",u:"kg",rp:130,wp:122,shop:45,god:150,min:20},
+{id:5,hi:"चना दाल",en:"Chana dal",cat:"दाल",u:"kg",rp:95,wp:89,shop:38,god:120,min:20},
+{id:6,hi:"सरसों तेल",en:"Mustard oil",cat:"तेल",u:"ltr",rp:150,wp:144,shop:40,god:200,min:25},
+{id:7,hi:"घी",en:"Ghee 500g",cat:"तेल",u:"pc",rp:330,wp:315,shop:12,god:60,min:15},
+{id:8,hi:"नमक",en:"Salt 1kg",cat:"मसाले",u:"pc",rp:28,wp:26,shop:70,god:200,min:30},
+{id:9,hi:"चाय पत्ती",en:"Tea 250g",cat:"मसाले",u:"pc",rp:120,wp:112,shop:30,god:90,min:15},
+{id:10,hi:"हल्दी",en:"Turmeric 100g",cat:"मसाले",u:"pc",rp:30,wp:27,shop:8,god:100,min:20},
+{id:11,hi:"गुड़",en:"Jaggery",cat:"अनाज",u:"kg",rp:55,wp:50,shop:35,god:150,min:20},
+{id:12,hi:"साबुन",en:"Soap",cat:"घर",u:"pc",rp:35,wp:32,shop:55,god:240,min:30},
+{id:13,hi:"बिस्कुट",en:"Biscuit",cat:"घर",u:"pc",rp:10,wp:9,shop:120,god:600,min:60},
+{id:14,hi:"मैदा",en:"Maida",cat:"अनाज",u:"kg",rp:40,wp:37,shop:50,god:200,min:25}];
+var cats=["सब"].concat(items.map(function(i){return i.cat}).filter(function(c,i,a){return a.indexOf(c)===i}));
+var S={role:"staff",tab:"bill",mode:"retail",cat:"सब",cart:{},sales:[],returns:[],rsel:null,held:[],pts:{},udh:{},log:[],recv:0,no:1000};
+function $(id){return document.getElementById(id)}
+function R(n){return "₹"+Math.round(n).toLocaleString("en-IN")}
+function find(id){return items.filter(function(i){return i.id==id})[0]}
+function price(i){return S.mode==="wholesale"?i.wp:i.rp}
+function toast(m){var t=$("toast");t.textContent=m;t.style.display="block";clearTimeout(toast.h);toast.h=setTimeout(function(){t.style.display="none"},2600)}
+function setSeg(id,attr,val){Array.prototype.forEach.call($(id).children,function(b){b.classList.toggle("on",b.getAttribute(attr)===val)})}
+function showTab(t){S.tab=t;["bill","stock","ret","own"].forEach(function(x){$("t-"+x).classList.toggle("hide",x!==t)});setSeg("tabs","data-t",t);draw()}
+function draw(){drawGrid();drawCart();drawStock();drawOwner()}
+function drawGrid(){
+ $("chips").innerHTML=cats.map(function(c){return '<button class="chip'+(c===S.cat?" on":"")+'" data-c="'+c+'">'+c+'</button>'}).join("");
+ var q=$("q").value.toLowerCase();
+ $("grid").innerHTML=items.filter(function(i){return(S.cat==="सब"||i.cat===S.cat)&&(i.hi+i.en).toLowerCase().indexOf(q)>-1}).map(function(i){
+  return '<button class="it'+(i.shop<=0?" out":"")+'" data-i="'+i.id+'"><b>'+i.hi+'</b><span>'+i.en+'</span><em>'+R(price(i))+'/'+i.u+'</em><span>स्टॉक '+i.shop+' · कोड '+i.code.slice(-4)+'</span></button>'}).join("")||'<p class="note">कोई सामान नहीं मिला</p>';
+}
+function sub(){var s=0;for(var id in S.cart)s+=find(id).rp*0+price(find(id))*S.cart[id];return s}
+function pct(){return Math.max(0,Math.min(50,Number($("disc").value)||0))}
+function total(){return sub()*(1-pct()/100)}
+function drawCart(){
+ var ids=Object.keys(S.cart);
+ $("cart").innerHTML=ids.length?ids.map(function(id){var i=find(id);return '<div class="row"><div><b>'+i.hi+'</b><div class="note">'+R(price(i))+' × '+S.cart[id]+' '+i.u+'</div></div><div class="q"><button data-d="-1" data-i="'+id+'" aria-label="कम">−</button><b>'+S.cart[id]+'</b><button data-d="1" data-i="'+id+'" aria-label="ज़्यादा">+</button></div><b>'+R(price(i)*S.cart[id])+'</b></div>'}).join(""):'<p class="note">सामान पर टैप करके बिल में जोड़ें · Tap an item to add it</p>';
+ $("total").textContent=R(total());
+ $("pinRow").classList.toggle("hide",!(S.role==="staff"&&pct()>5));
+}
+function drawStock(){
+ var own=S.role==="owner";$("addBox").classList.toggle("hide",!own);$("addHint").classList.toggle("hide",own);$("catList").innerHTML=cats.slice(1).map(function(c){return '<option value="'+c+'">'}).join("");
+ $("stockNote").textContent=own?"Owner can transfer and add purchases":"View only for staff";
+ $("stockBody").innerHTML=items.map(function(i){var low=i.shop<=i.min;
+  return '<tr><td><b>'+i.hi+'</b> <span class="note">'+i.en+'</span></td><td>'+i.shop+' '+i.u+'</td><td>'+i.god+' '+i.u+'</td><td>'+i.min+'</td><td><span class="pill '+(low?"low":"ok")+'">'+(low?"कम · Low":"ठीक · OK")+'</span></td><td>'+(own?'<button class="btn alt sm" data-tr="'+i.id+'">गोदाम→दुकान +20</button> <button class="btn alt sm" data-pu="'+i.id+'">खरीद +50</button> <button class="btn alt sm" data-wo="'+i.id+'">खराब/एक्सपायर −</button>':'<span class="note">—</span>')+'</td></tr>'}).join("");
+}
+function stats(){var t=0,p={Cash:0,UPI:0,Udhaar:0};S.sales.forEach(function(s){t+=s.total;p[s.pay]+=s.total});return{t:t,p:p,n:S.sales.length}}
+function drawOwner(){
+ var s=stats(),low=items.filter(function(i){return i.shop<=i.min});
+ $("stats").innerHTML=[["आज की बिक्री · Sales",R(s.t)],["बिल · Bills",s.n],["नकद · Cash",R(s.p.Cash)],["UPI",R(s.p.UPI)],["उधार · Credit",R(s.p.Udhaar)]].map(function(x){return '<div class="card stat"><span>'+x[0]+'</span><b>'+x[1]+'</b></div>'}).join("");
+ $("lowList").innerHTML=low.length?low.map(function(i){return '<div class="row"><span>'+i.hi+' <span class="note">'+i.en+'</span></span><span class="pill low">'+i.shop+' / '+i.min+'</span></div>'}).join(""):'<p class="note">सब ठीक है</p>';
+ $("recent").innerHTML=s.n?S.sales.slice(-8).reverse().map(function(b){return '<div class="row"><span>#'+b.no+' · '+b.pay+(b.cust?" · "+b.cust:"")+'<div class="note">'+b.time+' · '+b.mode+(b.disc?" · "+b.disc+"% off":"")+'</div></span><b>'+R(b.total)+'</b></div>'}).join(""):'<p class="note">अभी कोई बिल नहीं · No bills yet</p>';
+}
+function finalize(cart,pay,cust,mode,disc){
+ var lines=[],sub=0;
+ for(var id in cart){var i=find(id),p=mode==="wholesale"?i.wp:i.rp;i.shop-=cart[id];lines.push({id:id,n:i.hi,q:cart[id],u:i.u,p:p});sub+=p*cart[id]}
+ var b={no:++S.no,time:new Date().toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"}),lines:lines,total:sub*(1-disc/100),sub:sub,disc:disc,pay:pay,cust:cust,mode:mode==="wholesale"?"थोक":"खुदरा"};
+ S.sales.push(b);if(pay==="Udhaar"&&cust)S.udh[cust]=(S.udh[cust]||0)+b.total;return b;
+}
+function receipt(b){
+ $("mbox").innerHTML='<div class="rc"><b>राजपूत प्रोविज़न स्टोर, फर्रुखाबाद (डेमो)</b><br>बिल #'+b.no+' · '+b.time+'<hr>'+b.lines.map(function(l){return l.n+' '+l.q+l.u+' × '+l.p+' = '+(l.q*l.p)}).join("<br>")+'<hr>उप-योग: '+R(b.sub)+(b.disc?'<br>छूट '+b.disc+'%':'')+'<br><b>कुल: '+R(b.total)+'</b><br>भुगतान: '+b.pay+(b.cust?'<br>ग्राहक: '+b.cust:'')+'<br>धन्यवाद! 🙏</div><div style="display:flex;gap:8px;margin-top:12px"><button class="btn" id="mClose" style="flex:1">नया बिल</button></div><p class="note">In the real shop this prints on a small receipt printer and goes to the customer on WhatsApp.</p>';
+ $("modal").style.display="flex";$("mClose").onclick=function(){$("modal").style.display="none"};
+}
+function checkout(pay){
+ if(!Object.keys(S.cart).length){toast("पहले सामान जोड़ें");return}
+ if(S.role==="staff"&&pct()>5&&$("pin").value!=="1234"){toast("5% से ज़्यादा छूट के लिए मालिक PIN चाहिए");return}
+ var cust="";
+ if(pay==="Udhaar"){cust=(prompt("ग्राहक का नाम (उधार) · Customer name")||"").trim();if(!cust){toast("उधार के लिए नाम ज़रूरी है");return}}
+ var b=finalize(S.cart,pay,cust,S.mode,pct());S.cart={};$("disc").value=0;$("pin").value="";draw();receipt(b);
+}
+document.addEventListener("click",function(e){
+ var t=e.target.closest("button");if(!t)return;
+ if(t.parentNode.id==="roleSeg"){S.role=t.dataset.r;setSeg("roleSeg","data-r",S.role);$("ownTab").classList.toggle("hide",S.role!=="owner");if(S.role!=="owner"&&S.tab==="own")showTab("bill");else draw();return}
+ if(t.parentNode.id==="tabs"){showTab(t.dataset.t);return}
+ if(t.parentNode.id==="modeSeg"){S.mode=t.dataset.m;setSeg("modeSeg","data-m",S.mode);draw();return}
+ if(t.dataset.c){S.cat=t.dataset.c;drawGrid();return}
+ if(t.dataset.p){checkout(t.dataset.p);return}
+ if(t.dataset.d){var id=t.dataset.i,n=(S.cart[id]||0)+Number(t.dataset.d);if(n<=0)delete S.cart[id];else if(n>find(id).shop){toast("दुकान में इतना स्टॉक नहीं");return}else S.cart[id]=n;drawCart();return}
+ if(t.dataset.tr){var i=find(t.dataset.tr),m=Math.min(20,i.god);i.god-=m;i.shop+=m;toast(m+" "+i.u+" "+i.hi+" गोदाम से दुकान में आया");draw();return}
+ if(t.dataset.pu){var j=find(t.dataset.pu);j.god+=50;toast("खरीद दर्ज: "+j.hi+" +50");draw();return}
+ if(t.id==="sample"){sample();return}
+ if(t.dataset.i&&t.classList.contains("it")){var k=find(t.dataset.i);if(k.shop<=(S.cart[k.id]||0)){toast("स्टॉक खत्म");return}S.cart[k.id]=(S.cart[k.id]||0)+1;drawCart()}
+});
+$("q").addEventListener("input",drawGrid);
+$("disc").addEventListener("input",drawCart);
+function sample(){
+ var pays=["Cash","UPI","Udhaar"],names=["रामू","सीता देवी","मोहन","कैटरर शर्मा"];
+ for(var n=0;n<10;n++){var c={},k=1+Math.floor(Math.random()*3);
+  for(var j=0;j<k;j++){var i=items[Math.floor(Math.random()*items.length)],q=1+Math.floor(Math.random()*4);if(i.shop>=q)c[i.id]=q}
+  if(Object.keys(c).length){var p=pays[Math.floor(Math.random()*3)];finalize(c,p,p==="Udhaar"?names[Math.floor(Math.random()*4)]:"",Math.random()<.3?"wholesale":"retail",0)}}
+ draw();toast("Sample day loaded");
+}
+function clean(s){return String(s||"").replace(/[<>&"']/g,"").trim()}
+$("addBtn").addEventListener("click",function(){
+ var hi=clean($("nHi").value),en=clean($("nEn").value),cat=clean($("nCat").value)||"अन्य",rp=Number($("nRp").value),wp=Number($("nWp").value)||rp;
+ if(!hi){toast("सामान का नाम लिखें · Enter item name");return}
+ if(!(rp>0)){toast("खुदरा भाव लिखें · Enter retail price");return}
+ var dup=items.filter(function(i){return i.hi===hi})[0];if(dup){toast(hi+" पहले से है");return}
+ var id=Math.max.apply(null,items.map(function(i){return i.id}))+1;
+ items.push({id:id,hi:hi,en:en||hi,cat:cat,u:$("nU").value,rp:rp,wp:wp,shop:Math.max(0,Number($("nShop").value)||0),god:Math.max(0,Number($("nGod").value)||0),min:Math.max(0,Number($("nMin").value)||0)});
+ cats=["सब"].concat(items.map(function(i){return i.cat}).filter(function(c,i,a){return a.indexOf(c)===i}));
+ ["nHi","nEn","nCat","nRp","nWp"].forEach(function(f){$(f).value=""});$("nShop").value=0;$("nGod").value=0;$("nMin").value=10;
+ draw();toast(hi+" स्टॉक में जुड़ गया · Item added");
+});
+var SR=window.SpeechRecognition||window.webkitSpeechRecognition,rec=null;
+function stopMic(){$("mic").classList.remove("live");$("mic").textContent="🎤"}
+$("mic").addEventListener("click",function(){
+ if(rec){try{rec.stop()}catch(e){}return}
+ if(!SR){toast("इस ब्राउज़र में बोलकर लिखना नहीं चलता. Chrome या Edge खोलें · Voice needs Chrome or Edge");return}
+ try{rec=new SR();rec.lang=$("vlang").value;rec.interimResults=true;rec.continuous=false;
+  rec.onstart=function(){$("mic").classList.add("live");$("mic").textContent="⏹";$("voiceNote").textContent="सुन रहा है… बोलिए · Listening…"};
+  rec.onresult=function(ev){var t="";for(var i=0;i<ev.results.length;i++)t+=ev.results[i][0].transcript;$("q").value=t;drawGrid();$("voiceNote").textContent="सुना: “"+clean(t)+"”. सामान पर टैप करें · Tap the item to add"};
+  rec.onerror=function(ev){var m=ev.error==="not-allowed"||ev.error==="service-not-allowed"?"माइक की अनुमति नहीं मिली · Microphone blocked. Allow mic access or open the link in its own tab":ev.error==="no-speech"?"कुछ सुनाई नहीं दिया · Nothing heard, try again":"Voice error: "+ev.error;toast(m)};
+  rec.onend=function(){rec=null;stopMic()};
+  rec.start();
+ }catch(e){rec=null;stopMic();toast("Voice could not start")}
+});
+
+function clean(s){return String(s||"").replace(/[<>&"']/g,"").trim()}
+async function dl(name,data){
+ try{if(typeof claude==="undefined"||!claude.use){toast("डाउनलोड यहाँ उपलब्ध नहीं · Download not available here");return false}
+  var d=await claude.use("downloads");if(!d){toast("डाउनलोड यहाँ उपलब्ध नहीं · Download not available here");return false}
+  await d.save({filename:name,data:data});return true}
+ catch(e){if(!e||e.code!=="declined")toast("डाउनलोड नहीं हो सका · Could not download");return false}
+}
+function shell(inner,fname){
+ $("mbox").innerHTML='<div id="slip" class="rc">'+inner+'</div><div class="noprint" style="display:grid;gap:8px;margin-top:12px"><button class="btn" id="mPrint">🖨️ प्रिंट · Print</button><button class="btn alt" id="mSave">📄 फ़ाइल सेव करें · Save as file</button><button class="btn alt" id="mClose">✖ बंद करें · Close</button></div><p class="note noprint">प्रिंट न खुले तो “फ़ाइल सेव करें” दबाकर फ़ाइल से प्रिंट करें. If Print does not open, save the file and print it. Real shop: thermal printer.</p>';
+ $("modal").style.display="flex";
+ $("mClose").onclick=function(){$("modal").style.display="none"};
+ $("mPrint").onclick=function(){try{window.print()}catch(e){toast("प्रिंट नहीं खुला · Print blocked, use Save as file")}};
+ $("mSave").onclick=function(){dl(fname,'<!doctype html><meta charset="utf-8"><title>'+fname+'</title><body style="font-family:monospace;max-width:380px">'+inner+'</body>')};
+}
+function receipt(b){
+ shell('<b>राजपूत प्रोविज़न स्टोर, फर्रुखाबाद (डेमो)</b><br>बिल #'+b.no+' · '+b.time+'<hr>'+b.lines.map(function(l){return l.n+' '+l.q+l.u+' × '+l.p+' = '+(l.q*l.p)}).join("<br>")+'<hr>उप-योग: '+R(b.sub)+(b.disc?'<br>छूट '+b.disc+'%':'')+(b.redeem?'<br>पॉइंट छूट: −'+R(b.redeem):'')+'<br><b>कुल: '+R(b.total)+'</b><br>भुगतान: '+b.pay+(b.cust?'<br>ग्राहक: '+b.cust:'')+(b.mob?'<br>नए पॉइंट: '+b.earn+' · कुल '+S.pts[b.mob]:'')+'<br>धन्यवाद! 🙏',"bill-"+b.no+".html");
+}
+function draw(){items.forEach(function(i){if(!i.code)i.code=String(8900000+i.id*17)});drawGrid();drawCart();drawStock();drawOwner();drawRet();drawExtra()}
+function drawRet(){
+ var body=$("retBody"),ref=0;
+ S.returns.forEach(function(r){ref+=r.refund});
+ $("stats").insertAdjacentHTML("beforeend",'<div class="card stat"><span>वापसी · Refunds</span><b>'+R(ref)+'</b></div><div class="card stat"><span>शुद्ध बिक्री · Net sales</span><b>'+R(stats().t-ref)+'</b></div>');
+ $("retList").innerHTML=S.returns.length?S.returns.slice(-8).reverse().map(function(r){return '<div class="row"><span>'+r.no+' · बिल #'+r.bill+'<div class="note">'+r.time+' · '+r.reason+' · '+r.items.join(", ")+'</div></span><b>−'+R(r.refund)+'</b></div>'}).join(""):'<p class="note">अभी कोई वापसी नहीं · No returns yet</p>';
+ if(!S.sales.length){body.innerHTML='<p class="note">पहले कोई बिल बनाएँ (या Owner व्यू में “Load a sample day” दबाएँ). Make a bill first, or load a sample day in Owner view.</p>';return}
+ var h='<p class="note" style="font-size:15px"><b>1</b> बिल चुनें → <b>2</b> वापस होने वाली मात्रा भरें → <b>3</b> वापसी दबाएँ</p><div class="chips">'+S.sales.slice(-12).reverse().map(function(b){return '<button class="chip'+(S.rsel===b.no?" on":"")+'" data-rb="'+b.no+'">#'+b.no+' · '+R(b.total)+'</button>'}).join("")+'</div>';
+ var b=S.sales.filter(function(x){return x.no===S.rsel})[0];
+ if(b){
+  h+='<div style="margin-top:12px">'+b.lines.map(function(l,ix){var left=l.q-(l.ret||0);return '<div class="row"><span><b>'+l.n+'</b><div class="note">'+l.q+' '+l.u+' बेचा · '+(l.ret||0)+' वापस · दर '+R(l.p)+'</div></span>'+(left>0?'<input type="number" min="0" max="'+left+'" step="any" value="0" data-ri="'+ix+'" style="width:90px" aria-label="Return quantity">':'<span class="pill low">पूरा वापस</span>')+'</div>'}).join("")+'</div>'
+  +'<div class="row"><label for="rReason">कारण · Reason</label><select id="rReason"><option value="good">ग्राहक ने मना किया (सामान ठीक) · Not wanted</option><option value="wrong">गलत सामान · Wrong item</option><option value="damaged">खराब / एक्सपायर · Damaged</option></select></div>'
+  +'<div class="row"><label for="rPay">पैसे कैसे लौटाएँ · Refund by</label><select id="rPay"><option>Cash</option><option>UPI</option><option>Udhaar</option></select></div>'
+  +(S.role==="staff"?'<div class="row"><label for="rPin">मालिक PIN (डेमो: 1234)</label><input id="rPin" type="password" inputmode="numeric" style="width:90px"></div>':'')
+  +'<button class="btn" id="rGo" style="margin-top:12px;width:100%">↩️ वापसी करें · Confirm return</button><p class="note">ठीक सामान वापस दुकान के स्टॉक में जुड़ता है; खराब सामान स्टॉक में नहीं जुड़ता. Good items go back to stock; damaged ones do not.</p>';
+ }
+ body.innerHTML=h;
+}
+function doReturn(){
+ var b=S.sales.filter(function(x){return x.no===S.rsel})[0];if(!b)return;
+ if(S.role==="staff"&&$("rPin").value!=="1234"){toast("वापसी के लिए मालिक PIN चाहिए · Owner PIN needed");return}
+ var got=[],refund=0,rs=$("rReason").value,label=$("rReason").options[$("rReason").selectedIndex].text.split(" · ")[1]||rs;
+ Array.prototype.forEach.call(document.querySelectorAll("[data-ri]"),function(inp){var l=b.lines[inp.dataset.ri],n=Number(inp.value)||0,left=l.q-(l.ret||0);if(n>left)n=left;if(n>0)got.push({l:l,n:n})});
+ if(!got.length){toast("वापस होने वाली मात्रा भरें · Enter quantity");return}
+ got.forEach(function(g){refund+=g.n*g.l.p*(1-(b.disc||0)/100);g.l.ret=(g.l.ret||0)+g.n;var it=find(g.l.id);if(rs==="damaged")it.dam=(it.dam||0)+g.n;else it.shop+=g.n});
+ S.rno=(S.rno||500)+1;
+ var r={no:"R"+S.rno,bill:b.no,time:new Date().toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"}),reason:label,refund:refund,pay:$("rPay").value,items:got.map(function(g){return g.l.n+" ×"+g.n})};
+ S.returns.push(r);if(r.pay==="Udhaar"&&b.cust&&S.udh[b.cust])S.udh[b.cust]=Math.max(0,S.udh[b.cust]-refund);addLog("वापसी "+r.no+" बिल #"+b.no+" "+R(refund));S.rsel=null;draw();
+ shell('<b>वापसी पर्ची · Return slip</b><br>'+r.no+' · बिल #'+b.no+' · '+r.time+'<hr>'+r.items.join("<br>")+'<hr><b>लौटाए: '+R(refund)+'</b> ('+r.pay+')<br>कारण: '+r.reason,"return-"+r.no+".html");
+}
+async function exportXlsx(){
+ var d=new Date(),stamp=d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2);
+ var bills=[["Bill No","Time","Customer","Type","Payment","Subtotal","Discount %","Total","Refunded"]],lines=[["Bill No","Item","Qty","Unit","Rate","Amount","Returned"]];
+ S.sales.forEach(function(b){bills.push([b.no,b.time,b.cust||"",b.mode,b.pay,b.sub,b.disc,b.total,b.refunded||0]);b.lines.forEach(function(l){lines.push([b.no,l.n,l.q,l.u,l.p,l.q*l.p,l.ret||0])})});
+ var stock=[["Item","English","Category","Unit","Retail","Wholesale","Shop stock","Godown stock","Min stock","Damaged"]];
+ items.forEach(function(i){stock.push([i.hi,i.en,i.cat,i.u,i.rp,i.wp,i.shop,i.god,i.min,i.dam||0])});
+ var rets=[["Return No","Bill No","Time","Reason","Refund","Refund by","Items"]];
+ S.returns.forEach(function(r){rets.push([r.no,r.bill,r.time,r.reason,r.refund,r.pay,r.items.join("; ")])});
+ if(typeof XLSX==="undefined"){var csv=bills.map(function(r){return r.join(",")}).join("\n");if(await dl("rajput-provision-bills-"+stamp+".csv",csv))toast("CSV सेव हुई · Saved as CSV");return}
+ var wb=XLSX.utils.book_new();
+ [["Bills",bills],["Bill items",lines],["Stock",stock],["Returns",rets],["Credit",[["Customer","Owed"]].concat(Object.keys(S.udh).map(function(k){return[k,S.udh[k]]}))],["Activity log",[["Entry"]].concat(S.log.map(function(x){return[x]}))]].forEach(function(x){XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(x[1]),x[0])});
+ var out=XLSX.write(wb,{bookType:"xlsx",type:"array"});
+ if(await dl("rajput-provision-"+stamp+".xlsx",out))toast("Excel सेव हुई · अब इसे Google Drive में डालें");
+}
+document.addEventListener("click",function(e){
+ var t=e.target.closest("button");if(!t)return;
+ if(t.dataset.rb){S.rsel=Number(t.dataset.rb);drawRet();return}
+ if(t.id==="xl"){exportXlsx();return}
+ if(t.id==="rGo"){doReturn()}
+});
+
+function addLog(m){S.log.push(new Date().toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"})+" · "+(S.role==="owner"?"मालिक":"कर्मचारी")+" · "+m)}
+function mobile(){var m=($("mob").value||"").replace(/\D/g,"");return m.length===10?m:""}
+function redeemAmt(){var m=mobile();if(!m||!$("redeem").checked)return 0;return Math.min(S.pts[m]||0,Math.floor(sub()*(1-pct()/100)))}
+function total(){return sub()*(1-pct()/100)-redeemAmt()}
+var _dc=drawCart;
+drawCart=function(){_dc();var m=mobile();$("pts").textContent=m?"पॉइंट: "+(S.pts[m]||0)+" (1 पॉइंट = ₹1)":"हर ₹100 पर 1 पॉइंट";$("redeem").disabled=!(m&&(S.pts[m]||0)>0);if($("redeem").disabled)$("redeem").checked=false;_dc();};
+function checkout(pay){
+ if(!Object.keys(S.cart).length){toast("पहले सामान जोड़ें");return}
+ if(S.role==="staff"&&pct()>5&&$("pin").value!=="1234"){toast("5% से ज़्यादा छूट के लिए मालिक PIN चाहिए");return}
+ var cust="",m=mobile();
+ if(pay==="Udhaar"){cust=(prompt("ग्राहक का नाम (उधार) · Customer name")||"").trim();if(!cust){toast("उधार के लिए नाम ज़रूरी है");return}}
+ var use=redeemAmt(),b=finalize(S.cart,pay,cust,S.mode,pct());
+ if(use>0){b.total-=use;b.redeem=use;S.pts[m]-=use;if(pay==="Udhaar"&&cust)S.udh[cust]-=use}
+ if(m){b.mob=m;b.earn=Math.floor(b.total/100);S.pts[m]=(S.pts[m]||0)+b.earn}
+ if(b.disc>0)addLog("छूट "+b.disc+"% बिल #"+b.no);
+ S.cart={};$("disc").value=0;$("pin").value="";$("redeem").checked=false;draw();receipt(b);
+}
+function drawHeld(){$("heldBox").innerHTML=S.held.map(function(h,ix){var t=0;for(var id in h.cart){var i=find(id);t+=(h.mode==="wholesale"?i.wp:i.rp)*h.cart[id]}return '<button class="chip" data-hk="'+ix+'">▶ बिल '+(ix+1)+' · '+R(t)+'</button>'}).join("")}
+function drawExtra(){
+ drawHeld();
+ var k=Object.keys(S.udh).filter(function(n){return S.udh[n]>0.5});
+ $("udhList").innerHTML=k.length?k.map(function(n){return '<div class="row"><span><b>'+n+'</b></span><span>'+R(S.udh[n])+' <button class="btn alt sm" data-up="'+n+'">पैसे मिले</button></span></div>'}).join(""):'<p class="note">कोई उधार बाकी नहीं · No credit due</p>';
+ var tr=[],od=[];items.forEach(function(i){if(i.shop<=i.min){var need=Math.ceil(i.min*2-i.shop);if(i.god>=need)tr.push("• "+i.hi+" — "+need+" "+i.u);else od.push("• "+i.hi+" — "+Math.ceil(i.min*4-i.god-i.shop)+" "+i.u)}});
+ var txt="राजपूत प्रोविज़न स्टोर — ऑर्डर सूची\n\nगोदाम से दुकान में लाएँ:\n"+(tr.join("\n")||"—")+"\n\nसप्लायर से मंगाएँ:\n"+(od.join("\n")||"—");
+ $("reorder").innerHTML='<p class="note">कम होते सामान से अपने-आप बनी सूची · Built from low-stock items</p><textarea id="reTxt" readonly rows="8" style="width:100%;font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px">'+txt+'</textarea><button class="btn alt sm" id="copyRe" style="margin-top:8px">📋 कॉपी करें · Copy for WhatsApp</button>';
+ $("logList").innerHTML=S.log.length?S.log.slice(-10).reverse().map(function(x){return '<div class="row"><span class="note">'+x+'</span></div>'}).join(""):'<p class="note">अभी कोई गतिविधि नहीं · Discounts, returns and write-offs appear here</p>';
+}
+$("scan").addEventListener("keydown",function(e){
+ if(e.key!=="Enter")return;var v=this.value.trim().toLowerCase();if(!v)return;
+ var it=items.filter(function(i){return i.code===v||(v.length===4&&i.code.slice(-4)===v)||i.hi===v||i.en.toLowerCase()===v})[0];
+ if(!it){toast("कोड नहीं मिला · Code not found");return}
+ if(it.shop<=(S.cart[it.id]||0)){toast("स्टॉक खत्म");return}
+ S.cart[it.id]=(S.cart[it.id]||0)+1;this.value="";drawCart();toast("✔ "+it.hi+" जुड़ गया");
+});
+$("mob").addEventListener("input",drawCart);$("redeem").addEventListener("change",drawCart);
+document.addEventListener("click",function(e){
+ var t=e.target.closest("button");if(!t)return;
+ if(t.id==="hold"){if(!Object.keys(S.cart).length){toast("होल्ड के लिए बिल खाली है");return}S.held.push({cart:S.cart,mode:S.mode});S.cart={};draw();toast("बिल होल्ड हुआ — अगला ग्राहक शुरू करें");return}
+ if(t.dataset.hk!==undefined){if(Object.keys(S.cart).length){toast("पहले मौजूदा बिल पूरा करें या होल्ड करें");return}var h=S.held.splice(Number(t.dataset.hk),1)[0];S.cart=h.cart;S.mode=h.mode;setSeg("modeSeg","data-m",S.mode);draw();return}
+ if(t.dataset.up){var n=t.dataset.up,a=Number(prompt("कितने रुपये मिले? · Amount received from "+n));if(!(a>0))return;a=Math.min(a,S.udh[n]);S.udh[n]-=a;S.recv+=a;addLog(n+" से उधार वसूली "+R(a));draw();return}
+ if(t.dataset.wo){var i=find(t.dataset.wo),q=Number(prompt(i.hi+": कितना खराब/एक्सपायर? · Damaged quantity"));if(!(q>0))return;q=Math.min(q,i.shop);i.shop-=q;i.dam=(i.dam||0)+q;addLog(i.hi+" "+q+" "+i.u+" खराब/एक्सपायर");draw();return}
+ if(t.id==="copyRe"){var x=$("reTxt");x.select();var ok=false;try{ok=document.execCommand("copy")}catch(er){}toast(ok?"कॉपी हो गया":"टेक्स्ट चुनकर कॉपी करें");return}
+ if(t.id==="ccGo"){var v=$("cc").value;if(v===""){toast("गिना हुआ नकद लिखें");return}
+  var cr=0;S.returns.forEach(function(r){if(r.pay==="Cash")cr+=r.refund});var exp=stats().p.Cash-cr+S.recv,diff=Number(v)-exp;
+  $("ccOut").innerHTML='अपेक्षित नकद · Expected: <b>'+R(exp)+'</b><br>गिना · Counted: <b>'+R(Number(v))+'</b><br><span class="pill '+(Math.abs(diff)<1?"ok":"low")+'">'+(Math.abs(diff)<1?"मिलान सही ✔":"अंतर: "+(diff>0?"+":"−")+R(Math.abs(diff)))+'</span>';
+  addLog("दिन का हिसाब: अपेक्षित "+R(exp)+", गिना "+R(Number(v)))}
+});
+draw();
+</script>
+</body>
+</html>
